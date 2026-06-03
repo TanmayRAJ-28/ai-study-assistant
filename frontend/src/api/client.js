@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_BASE = "/api";
+const API_BASE =
+  "https://ai-study-assistant-backend-p4vb.onrender.com/api";
 
 export const uploadPDFs = async (files, sessionId = null) => {
   const formData = new FormData();
