@@ -33,14 +33,21 @@ async def upload_files(
         file_names = []
 
         for file in files:
-            file_path = os.path.join(UPLOAD_DIR, file.filename)
+            safe_name = os.path.basename(file.filename)
+            file_path = os.path.join(UPLOAD_DIR, safe_name)
 
+            # Stream the upload to disk in chunks so large PDFs do not
+            # load into RAM all at once on a 512 MB instance.
             with open(file_path, "wb") as f:
-                f.write(await file.read())
+                while True:
+                    chunk = await file.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    f.write(chunk)
 
             docs = process_pdf(file_path)
             all_docs.extend(docs)
-            file_names.append(file.filename)
+            file_names.append(safe_name)
 
         if not all_docs:
             raise HTTPException(status_code=400, detail="No valid documents")
