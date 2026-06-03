@@ -6,10 +6,11 @@ from routes.upload import router as upload_router
 from routes.query import router as query_router
 
 app = FastAPI()
-
 app.add_middleware(
     CORSMiddleware,
-   allow_origins=["*"],
+    allow_origins=[
+        "https://ai-study-assistant-bnrj.onrender.com"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
